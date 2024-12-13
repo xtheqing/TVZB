@@ -1,10 +1,18 @@
 import os
 
-output_dir = "output"
+config_path = "config"
 
-log_file = "result_new.log"
+output_path = "output"
 
-log_path = os.path.join(output_dir, log_file)
+whitelist_path = os.path.join(config_path, "whitelist.txt")
+
+result_path = os.path.join(output_path, "result_new.txt")
+
+cache_path = os.path.join(output_path, "cache.pkl")
+
+sort_log_path = os.path.join(output_path, "sort.log")
+
+log_path = os.path.join(output_path, "log.log")
 
 url_pattern = r"((https?):\/\/)?(\[[0-9a-fA-F:]+\]|([\w-]+\.)+[\w-]+)(:[0-9]{1,5})?(\/[^\s]*)?(\$[^\s]+)?"
 
@@ -94,3 +102,5 @@ ipv6_proxy = "http://www.ipv6proxy.net/go.php?u="
 foodie_url = "http://www.foodieguide.com/iptvsearch/"
 
 foodie_hotel_url = "http://www.foodieguide.com/iptvsearch/hoteliptv.php"
+
+waiting_tip = "🔍️未找到结果文件，若已启动更新，请耐心等待更新完成..."

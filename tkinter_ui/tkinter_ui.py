@@ -1,5 +1,5 @@
-import sys
 import os
+import sys
 
 sys.path.append(os.path.dirname(sys.path[0]))
 import tkinter as tk
@@ -7,7 +7,7 @@ from tkinter import messagebox
 from PIL import Image, ImageTk
 from utils.config import config
 from utils.tools import resource_path
-from main import UpdateSource, run_service
+from main import UpdateSource
 import asyncio
 import threading
 import webbrowser
@@ -55,7 +55,7 @@ class TkinterUI:
             "open_sort": self.default_ui.open_sort_var.get(),
             "open_filter_resolution": self.default_ui.open_filter_resolution_var.get(),
             "min_resolution": self.default_ui.min_resolution_entry.get(),
-            "response_time_weight": self.default_ui.response_time_weight_scale.get(),
+            "delay_weight": self.default_ui.delay_weight_scale.get(),
             "resolution_weight": self.default_ui.resolution_weight_scale.get(),
             "ipv_type": self.default_ui.ipv_type_combo.get(),
             "url_keywords_blacklist": self.default_ui.url_keywords_blacklist_text.get(
@@ -114,15 +114,10 @@ class TkinterUI:
     def on_run_update(self):
         loop = asyncio.new_event_loop()
 
-        async def run_service_async():
-            loop.run_in_executor(None, run_service)
-
         def run_loop():
             asyncio.set_event_loop(loop)
             loop.run_until_complete(self.run_update())
 
-        if config.open_service:
-            asyncio.run(run_service_async())
         self.thread = threading.Thread(target=run_loop, daemon=True)
         self.thread.start()
 

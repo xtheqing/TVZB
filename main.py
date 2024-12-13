@@ -1,72 +1,43 @@
 import asyncio
-from utils.config import config
+import copy
+import pickle
+from time import time
+
+from tqdm import tqdm
+
+import utils.constants as constants
+from service.app import run_service
+from updates.fofa import get_channels_by_fofa
+from updates.hotel import get_channels_by_hotel
+from updates.multicast import get_channels_by_multicast
+from updates.online_search import get_channels_by_online_search
+from updates.subscribe import get_channels_by_subscribe_urls
 from utils.channel import (
     get_channel_items,
     append_total_data,
     process_sort_channel_list,
     write_channel_to_file,
-    setup_logging,
-    cleanup_logging,
     get_channel_data_cache_with_compare,
     format_channel_url_info,
 )
+from utils.config import config
 from utils.tools import (
     update_file,
     get_pbar_remaining,
     get_ip_address,
     convert_to_m3u,
-    get_result_file_content,
     process_nested_dict,
     format_interval,
     check_ipv6_support,
     resource_path,
+    get_whitelist_urls
 )
-from updates.subscribe import get_channels_by_subscribe_urls
-from updates.multicast import get_channels_by_multicast
-from updates.hotel import get_channels_by_hotel
-from updates.fofa import get_channels_by_fofa
-from updates.online_search import get_channels_by_online_search
-import os
-from tqdm import tqdm
-from tqdm.asyncio import tqdm_asyncio
-from time import time
-from flask import Flask, render_template_string
-import sys
-import atexit
-import pickle
-import copy
-
-app = Flask(__name__)
-
-atexit.register(cleanup_logging)
-
-
-@app.route("/")
-def show_index():
-    return get_result_file_content()
-
-
-@app.route("/result")
-def show_result():
-    return get_result_file_content(show_result=True)
-
-
-@app.route("/log")
-def show_log():
-    user_log_file = "output/" + (
-        "user_result.log" if os.path.exists("config/user_config.ini") else "result.log"
-    )
-    with open(user_log_file, "r", encoding="utf-8") as file:
-        content = file.read()
-    return render_template_string(
-        "<head><link rel='icon' href='{{ url_for('static', filename='images/favicon.ico') }}' type='image/x-icon'></head><pre>{{ content }}</pre>",
-        content=content,
-    )
 
 
 class UpdateSource:
 
     def __init__(self):
+        self.update_progress = None
         self.run_ui = False
         self.tasks = []
         self.channel_items = {}
@@ -95,14 +66,15 @@ class UpdateSource:
 
         for setting, task_func, result_attr in tasks_config:
             if (
-                setting == "hotel_foodie" or setting == "hotel_fofa"
+                    setting == "hotel_foodie" or setting == "hotel_fofa"
             ) and config.open_hotel == False:
                 continue
             if config.open_method[setting]:
                 if setting == "subscribe":
                     subscribe_urls = config.subscribe_urls
+                    whitelist_urls = get_whitelist_urls()
                     task = asyncio.create_task(
-                        task_func(subscribe_urls, callback=self.update_progress)
+                        task_func(subscribe_urls, whitelist=whitelist_urls, callback=self.update_progress)
                     )
                 elif setting == "hotel_foodie" or setting == "hotel_fofa":
                     task = asyncio.create_task(task_func(callback=self.update_progress))
@@ -136,7 +108,6 @@ class UpdateSource:
     async def main(self):
         try:
             if config.open_update:
-                setup_logging()
                 main_start_time = time()
                 self.channel_items = get_channel_items()
                 channel_names = [
@@ -169,7 +140,7 @@ class UpdateSource:
                         0,
                     )
                     self.start_time = time()
-                    self.pbar = tqdm_asyncio(total=self.total, desc="Sorting")
+                    self.pbar = tqdm(total=self.total, desc="Sorting")
                     self.channel_data = await process_sort_channel_list(
                         self.channel_data,
                         ipv6=ipv6_support,
@@ -187,31 +158,24 @@ class UpdateSource:
                 )
                 self.pbar.close()
                 user_final_file = config.final_file
-                update_file(user_final_file, "output/result_new.txt")
+                update_file(user_final_file, constants.result_path)
                 if config.open_use_old_result:
                     if open_sort:
                         get_channel_data_cache_with_compare(
                             channel_data_cache, self.channel_data
                         )
                     with open(
-                        resource_path("output/result_cache.pkl", persistent=True), "wb"
+                            resource_path(constants.cache_path, persistent=True),
+                            "wb",
                     ) as file:
                         pickle.dump(channel_data_cache, file)
-                if open_sort:
-                    user_log_file = "output/" + (
-                        "user_result.log"
-                        if os.path.exists("config/user_config.ini")
-                        else "result.log"
-                    )
-                    update_file(user_log_file, "output/result_new.log", copy=True)
-                    cleanup_logging()
                 convert_to_m3u()
                 total_time = format_interval(time() - main_start_time)
                 print(
                     f"🥳 Update completed! Total time spent: {total_time}. Please check the {user_final_file} file!"
                 )
-            open_service = config.open_service
             if self.run_ui:
+                open_service = config.open_service
                 service_tip = ", 可使用以下链接观看直播:" if open_service else ""
                 tip = (
                     f"✅ 服务启动成功{service_tip}"
@@ -224,6 +188,8 @@ class UpdateSource:
                     True,
                     url=f"{get_ip_address()}" if open_service else None,
                 )
+                if open_service:
+                    run_service()
         except asyncio.exceptions.CancelledError:
             print("Update cancelled!")
 
@@ -243,31 +209,8 @@ class UpdateSource:
             self.pbar.close()
 
 
-def scheduled_task():
+if __name__ == "__main__":
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     update_source = UpdateSource()
     loop.run_until_complete(update_source.start())
-
-
-def run_service():
-    try:
-        if not os.environ.get("GITHUB_ACTIONS"):
-            ip_address = get_ip_address()
-            print(f"📄 Result detail: {ip_address}/result")
-            print(f"📄 Log detail: {ip_address}/log")
-            print(f"✅ You can use this url to watch IPTV 📺: {ip_address}")
-            app.run(host="0.0.0.0", port=8000)
-    except Exception as e:
-        print(f"❌ Service start failed: {e}")
-
-
-if __name__ == "__main__":
-    if len(sys.argv) == 1 and config.open_service:
-        loop = asyncio.new_event_loop()
-
-        async def run_service_async():
-            loop.run_in_executor(None, run_service)
-
-        asyncio.run(run_service_async())
-    scheduled_task()

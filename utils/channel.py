@@ -1,78 +1,36 @@
-from utils.config import config
+import asyncio
+import base64
+import copy
+import datetime
+import os
+import pickle
+import re
+from collections import defaultdict
+
+from bs4 import NavigableString
+from opencc import OpenCC
+
 import utils.constants as constants
+from utils.config import config
+from utils.speed import (
+    get_speed,
+    sort_urls,
+)
 from utils.tools import (
+    get_name_url,
     check_url_by_patterns,
-    get_total_urls_from_info_list,
+    get_total_urls,
     process_nested_dict,
     add_url_info,
     remove_cache_info,
     resource_path,
     write_content_into_txt,
+    get_whitelist_urls,
+    get_whitelist_name_urls
 )
-from utils.speed import (
-    sort_urls_by_speed_and_resolution,
-    is_ffmpeg_installed,
-    speed_cache,
-)
-import os
-from collections import defaultdict
-import re
-from bs4 import NavigableString
-import logging
-from logging.handlers import RotatingFileHandler
-from opencc import OpenCC
-import asyncio
-import base64
-import pickle
-import copy
-import datetime
-
-handler = None
 
 
-def setup_logging():
-    """
-    Setup logging
-    """
-    global handler
-    if not os.path.exists(constants.output_dir):
-        os.makedirs(constants.output_dir)
-    handler = RotatingFileHandler(constants.log_path, encoding="utf-8")
-    logging.basicConfig(
-        handlers=[handler],
-        format="%(message)s",
-        level=logging.INFO,
-    )
-
-
-def cleanup_logging():
-    """
-    Cleanup logging
-    """
-    global handler
-    if handler:
-        for handler in logging.root.handlers[:]:
-            handler.close()
-            logging.root.removeHandler(handler)
-    if os.path.exists(constants.log_path):
-        os.remove(constants.log_path)
-
-
-def get_name_url(content, pattern, multiline=False, check_url=True):
-    """
-    Get channel name and url from content
-    """
-    flag = re.MULTILINE if multiline else 0
-    matches = re.findall(pattern, content, flag)
-    channels = [
-        {"name": match[0].strip(), "url": match[1].strip()}
-        for match in matches
-        if (check_url and match[1].strip()) or not check_url
-    ]
-    return channels
-
-
-def get_channel_data_from_file(channels, file, use_old):
+def get_channel_data_from_file(channels, file, use_old, whitelist):
     """
     Get the channel data from the file
     """
@@ -92,6 +50,9 @@ def get_channel_data_from_file(channels, file, use_old):
                 category_dict = channels[current_category]
                 if name not in category_dict:
                     category_dict[name] = []
+                if name in whitelist:
+                    for whitelist_url in whitelist[name]:
+                        category_dict[name].append((whitelist_url, None, None, "important"))
                 if use_old and url:
                     info = url.partition("$")[2]
                     origin = None
@@ -109,15 +70,19 @@ def get_channel_items():
     """
     user_source_file = resource_path(config.source_file)
     channels = defaultdict(lambda: defaultdict(list))
+    whitelist = get_whitelist_name_urls()
+    whitelist_len = len(list(whitelist.keys()))
+    if whitelist_len:
+        print(f"Found {whitelist_len} channel in whitelist")
 
     if os.path.exists(user_source_file):
         with open(user_source_file, "r", encoding="utf-8") as file:
             channels = get_channel_data_from_file(
-                channels, file, config.open_use_old_result
+                channels, file, config.open_use_old_result, whitelist
             )
 
     if config.open_use_old_result:
-        result_cache_path = resource_path("output/result_cache.pkl")
+        result_cache_path = resource_path(constants.cache_path)
         if os.path.exists(result_cache_path):
             with open(result_cache_path, "rb") as file:
                 old_result = pickle.load(file)
@@ -238,9 +203,9 @@ def get_channel_multicast_region_type_list(result):
         for region_type in result.values()
         for region, types in region_type.items()
         if "all" in region_list
-        or "ALL" in region_list
-        or "全部" in region_list
-        or region in region_list
+           or "ALL" in region_list
+           or "全部" in region_list
+           or region in region_list
         for type in types
     }
     return list(region_type_list)
@@ -258,7 +223,7 @@ def get_channel_multicast_result(result, search_result):
                 (
                     add_url_info(
                         f"http://{url}/rtp/{ip}",
-                        f"{result_region}{result_type}{multicast_name}|cache:{url}",
+                        f"{result_region}{result_type}{multicast_name}-cache:{url}",
                     )
                     if config.open_sort
                     else add_url_info(
@@ -463,9 +428,7 @@ def init_info_data(data, cate, name):
         data[cate][name] = []
 
 
-def append_data_to_info_data(
-    info_data, cate, name, data, origin=None, check=True, insert=False
-):
+def append_data_to_info_data(info_data, cate, name, data, origin=None, check=True):
     """
     Append channel data to total info data
     """
@@ -482,18 +445,11 @@ def append_data_to_info_data(
                 if pure_url in urls:
                     continue
                 if (
-                    url_origin == "important"
-                    or (not check)
-                    or (check and check_url_by_patterns(pure_url))
+                        url_origin == "important"
+                        or (not check)
+                        or (check and check_url_by_patterns(pure_url))
                 ):
-                    if insert:
-                        info_data[cate][name].insert(
-                            0, (url, date, resolution, url_origin)
-                        )
-                    else:
-                        info_data[cate][name].append(
-                            (url, date, resolution, url_origin)
-                        )
+                    info_data[cate][name].append((url, date, resolution, url_origin))
                     urls.append(pure_url)
         except:
             continue
@@ -520,14 +476,14 @@ def append_old_data_to_info_data(info_data, cate, name, data):
 
 
 def append_total_data(
-    items,
-    names,
-    data,
-    hotel_fofa_result=None,
-    multicast_result=None,
-    hotel_foodie_result=None,
-    subscribe_result=None,
-    online_search_result=None,
+        items,
+        names,
+        data,
+        hotel_fofa_result=None,
+        multicast_result=None,
+        hotel_foodie_result=None,
+        subscribe_result=None,
+        online_search_result=None,
 ):
     """
     Append all method data to total info data
@@ -585,115 +541,47 @@ def append_total_data(
                     )
 
 
-async def sort_channel_list(
-    cate,
-    name,
-    info_list,
-    semaphore,
-    ffmpeg=False,
-    ipv6_proxy=None,
-    callback=None,
-):
-    """
-    Sort the channel list
-    """
-    async with semaphore:
-        data = []
-        try:
-            if info_list:
-                sorted_data = await sort_urls_by_speed_and_resolution(
-                    info_list, ffmpeg=ffmpeg, ipv6_proxy=ipv6_proxy, callback=callback
-                )
-                if sorted_data:
-                    for (url, date, resolution, origin), response_time in sorted_data:
-                        logging.info(
-                            f"Name: {name}, URL: {url}, Date: {date}, Resolution: {resolution}, Response Time: {response_time} ms"
-                        )
-                        data.append((url, date, resolution, origin))
-        except Exception as e:
-            logging.error(f"Error: {e}")
-        finally:
-            return {"cate": cate, "name": name, "data": data}
-
-
 async def process_sort_channel_list(data, ipv6=False, callback=None):
     """
-    Processs the sort channel list
+    Process the sort channel list
     """
     ipv6_proxy = None if (not config.open_ipv6 or ipv6) else constants.ipv6_proxy
-    ffmpeg_installed = is_ffmpeg_installed()
-    if config.open_ffmpeg and not ffmpeg_installed:
-        print("FFmpeg is not installed, using requests for sorting.")
-    is_ffmpeg = config.open_ffmpeg and ffmpeg_installed
-    semaphore = asyncio.Semaphore(5)
     need_sort_data = copy.deepcopy(data)
-    process_nested_dict(need_sort_data, seen=set(), flag=r"cache:(.*)", force_str="!")
+    whitelist_urls = get_whitelist_urls()
+    if whitelist_urls:
+        print(f"Found {len(whitelist_urls)} whitelist urls")
+    process_nested_dict(need_sort_data, seen=set(whitelist_urls), flag=r"cache:(.*)", force_str="!")
+    result = {}
+    semaphore = asyncio.Semaphore(10)
+
+    async def limited_get_speed(info, ipv6_proxy, callback):
+        async with semaphore:
+            return await get_speed(info[0], ipv6_proxy=ipv6_proxy, callback=callback)
+
     tasks = [
         asyncio.create_task(
-            sort_channel_list(
-                cate,
-                name,
-                info_list,
-                semaphore,
-                ffmpeg=is_ffmpeg,
+            limited_get_speed(
+                info,
                 ipv6_proxy=ipv6_proxy,
                 callback=callback,
             )
         )
-        for cate, channel_obj in need_sort_data.items()
-        for name, info_list in channel_obj.items()
+        for channel_obj in need_sort_data.values()
+        for info_list in channel_obj.values()
+        for info in info_list
     ]
-    sort_results = await asyncio.gather(*tasks)
-    sort_data = {}
-    for result in sort_results:
-        if result:
-            cate, name, result_data = result["cate"], result["name"], result["data"]
-            append_data_to_info_data(sort_data, cate, name, result_data, check=False)
+    await asyncio.gather(*tasks)
     for cate, obj in data.items():
         for name, info_list in obj.items():
-            sort_info_list = sort_data.get(cate, {}).get(name, [])
-            sort_urls = {
-                remove_cache_info(sort_url[0])
-                for sort_url in sort_info_list
-                if sort_url and sort_url[0]
-            }
-            for url, date, resolution, origin in info_list:
-                if "$" in url:
-                    info = url.partition("$")[2]
-                    if info and info.startswith("!"):
-                        append_data_to_info_data(
-                            sort_data,
-                            cate,
-                            name,
-                            [(url, date, resolution, origin)],
-                            check=False,
-                            insert=True,
-                        )
-                        continue
-                    matcher = re.search(r"cache:(.*)", info)
-                    if matcher:
-                        cache_key = matcher.group(1)
-                        if not cache_key:
-                            continue
-                        url = remove_cache_info(url)
-                        if url in sort_urls or cache_key not in speed_cache:
-                            continue
-                        cache = speed_cache[cache_key]
-                        if not cache:
-                            continue
-                        response_time, resolution = cache
-                        if response_time and response_time != float("inf"):
-                            append_data_to_info_data(
-                                sort_data,
-                                cate,
-                                name,
-                                [(url, date, resolution, origin)],
-                                check=False,
-                            )
-                            logging.info(
-                                f"Name: {name}, URL: {url}, Date: {date}, Resolution: {resolution}, Response Time: {response_time} ms"
-                            )
-    return sort_data
+            info_list = sort_urls(name, info_list, whitelist=whitelist_urls)
+            append_data_to_info_data(
+                result,
+                cate,
+                name,
+                info_list,
+                check=False,
+            )
+    return result
 
 
 def write_channel_to_file(data, ipv6=False, callback=None):
@@ -710,6 +598,10 @@ def write_channel_to_file(data, ipv6=False, callback=None):
         write_content_into_txt(f"{update_time},url", path)
     no_result_name = []
     open_empty_category = config.open_empty_category
+    ipv_type_prefer = list(config.ipv_type_prefer)
+    if any(pref in ipv_type_prefer for pref in ["自动", "auto"]) or not ipv_type_prefer:
+        ipv_type_prefer = ["ipv6", "ipv4"] if (ipv6 or os.environ.get("GITHUB_ACTIONS")) else ["ipv4", "ipv6"]
+    origin_type_prefer = config.origin_type_prefer
     for cate, channel_obj in data.items():
         print(f"\n{cate}:", end=" ")
         write_content_into_txt(f"{cate},#genre#", path)
@@ -717,7 +609,7 @@ def write_channel_to_file(data, ipv6=False, callback=None):
         names_len = len(list(channel_obj_keys))
         for i, name in enumerate(channel_obj_keys):
             info_list = data.get(cate, {}).get(name, [])
-            channel_urls = get_total_urls_from_info_list(info_list, ipv6=ipv6)
+            channel_urls = get_total_urls(info_list, ipv_type_prefer, origin_type_prefer)
             end_char = ", " if i < names_len - 1 else ""
             print(f"{name}:", len(channel_urls), end=end_char)
             if not channel_urls:
@@ -750,7 +642,7 @@ def get_multicast_fofa_search_org(region, type):
     elif type == "电信":
         org = "Chinanet"
     elif type == "移动":
-        org == "China Mobile communications corporation"
+        org = "China Mobile communications corporation"
     return org
 
 
@@ -768,14 +660,14 @@ def get_multicast_fofa_search_urls():
         (parts[0], parts[1])
         for name in rtp_file_names
         if (parts := name.partition("_"))[0] in region_list
-        or "all" in region_list
-        or "ALL" in region_list
-        or "全部" in region_list
+           or "all" in region_list
+           or "ALL" in region_list
+           or "全部" in region_list
     ]
     search_urls = []
     for region, type in region_type_list:
         search_url = "https://fofa.info/result?qbase64="
-        search_txt = f'"udpxy" && country="CN" && region="{region}" && org="{get_multicast_fofa_search_org(region,type)}"'
+        search_txt = f'"udpxy" && country="CN" && region="{region}" && org="{get_multicast_fofa_search_org(region, type)}"'
         bytes_string = search_txt.encode("utf-8")
         search_txt = base64.b64encode(bytes_string).decode("utf-8")
         search_url += search_txt

@@ -1,18 +1,37 @@
-from time import time
 import datetime
-import os
-import urllib.parse
 import ipaddress
-from urllib.parse import urlparse
-import socket
-from utils.config import config
-import utils.constants as constants
+import logging
+import os
 import re
+import shutil
+import socket
+import sys
+import urllib.parse
+from collections import defaultdict
+from logging.handlers import RotatingFileHandler
+from time import time
+
+import requests
 from bs4 import BeautifulSoup
 from flask import render_template_string, send_file
-import shutil
-import requests
-import sys
+
+import utils.constants as constants
+from utils.config import config
+
+
+def get_logger(path, level=logging.ERROR, init=False):
+    """
+    get the logger
+    """
+    if not os.path.exists(constants.output_path):
+        os.makedirs(constants.output_path)
+    if init and os.path.exists(path):
+        os.remove(path)
+    handler = RotatingFileHandler(path, encoding="utf-8")
+    logger = logging.getLogger(path)
+    logger.addHandler(handler)
+    logger.setLevel(level)
+    return logger
 
 
 def format_interval(t):
@@ -123,20 +142,15 @@ def get_resolution_value(resolution_str):
         return 0
 
 
-def get_total_urls_from_info_list(infoList, ipv6=False):
+def get_total_urls(info_list, ipv_type_prefer, origin_type_prefer):
     """
     Get the total urls from info list
     """
-    ipv_type_prefer = list(config.ipv_type_prefer)
-    if "自动" in ipv_type_prefer or "auto" in ipv_type_prefer or not ipv_type_prefer:
-        ipv_type_prefer = ["ipv6", "ipv4"] if ipv6 else ["ipv4", "ipv6"]
-    origin_type_prefer = config.origin_type_prefer
     categorized_urls = {
         origin: {"ipv4": [], "ipv6": []} for origin in origin_type_prefer
     }
-
     total_urls = []
-    for url, _, resolution, origin in infoList:
+    for url, _, resolution, origin in info_list:
         if not origin:
             continue
 
@@ -187,13 +201,16 @@ def get_total_urls_from_info_list(infoList, ipv6=False):
             if len(total_urls) >= urls_limit:
                 break
             if ipv_num[ipv_type] < config.ipv_limit[ipv_type]:
+                urls = categorized_urls[origin][ipv_type]
+                if not urls:
+                    break
                 limit = min(
-                    config.source_limits[origin] - ipv_num[ipv_type],
-                    config.ipv_limit[ipv_type] - ipv_num[ipv_type],
+                    max(config.source_limits[origin] - ipv_num[ipv_type], 0),
+                    max(config.ipv_limit[ipv_type] - ipv_num[ipv_type], 0),
                 )
-                urls = categorized_urls[origin][ipv_type][:limit]
-                total_urls.extend(urls)
-                ipv_num[ipv_type] += len(urls)
+                limit_urls = urls[:limit]
+                total_urls.extend(limit_urls)
+                ipv_num[ipv_type] += len(limit_urls)
             else:
                 continue
 
@@ -206,8 +223,8 @@ def get_total_urls_from_info_list(infoList, ipv6=False):
                 if len(total_urls) >= urls_limit:
                     break
                 extra_urls = categorized_urls[origin][ipv_type][
-                    : config.source_limits[origin]
-                ]
+                             : config.source_limits[origin]
+                             ]
                 total_urls.extend(extra_urls)
                 total_urls = list(dict.fromkeys(total_urls))[:urls_limit]
 
@@ -256,7 +273,7 @@ def check_ipv6_support():
             return True
     except Exception:
         pass
-    print("Your network does not support IPv6")
+    print("Your network does not support IPv6, don't worry, these results will be saved")
     return False
 
 
@@ -267,10 +284,10 @@ def check_url_ipv_type(url):
     ipv6 = is_ipv6(url)
     ipv_type = config.ipv_type
     return (
-        (ipv_type == "ipv4" and not ipv6)
-        or (ipv_type == "ipv6" and ipv6)
-        or ipv_type == "全部"
-        or ipv_type == "all"
+            (ipv_type == "ipv4" and not ipv6)
+            or (ipv_type == "ipv6" and ipv6)
+            or ipv_type == "全部"
+            or ipv_type == "all"
     )
 
 
@@ -339,7 +356,7 @@ def get_ip_address():
         IP = "127.0.0.1"
     finally:
         s.close()
-    return f"http://{IP}:8000"
+    return f"http://{IP}:{os.environ.get("APP_PORT") or 8000}"
 
 
 def convert_to_m3u():
@@ -366,7 +383,7 @@ def convert_to_m3u():
                         processed_channel_name = re.sub(
                             r"(CCTV|CETV)-(\d+)(\+.*)?",
                             lambda m: f"{m.group(1)}{m.group(2)}"
-                            + ("+" if m.group(3) else ""),
+                                      + ("+" if m.group(3) else ""),
                             original_channel_name,
                         )
                         m3u_output += f'#EXTINF:-1 tvg-name="{processed_channel_name}" tvg-logo="https://live.fanmingming.com/tv/{processed_channel_name}.png"'
@@ -376,23 +393,29 @@ def convert_to_m3u():
             m3u_file_path = os.path.splitext(user_final_file)[0] + ".m3u"
             with open(m3u_file_path, "w", encoding="utf-8") as m3u_file:
                 m3u_file.write(m3u_output)
-            print(f"✅ Result m3u file generated at: {m3u_file_path}")
+            print(f"✅ M3U result file generated at: {m3u_file_path}")
 
 
-def get_result_file_content(show_result=False):
+def get_result_file_content(show_content=False, file_type=None):
     """
     Get the content of the result file
     """
     user_final_file = resource_path(config.final_file)
-    if os.path.exists(user_final_file):
+    result_file = (
+        os.path.splitext(user_final_file)[0] + f".{file_type}"
+        if file_type
+        else user_final_file
+    )
+    if os.path.exists(result_file):
         if config.open_m3u_result:
-            user_final_file = os.path.splitext(user_final_file)[0] + ".m3u"
-            if show_result == False:
-                return send_file(user_final_file, as_attachment=True)
-        with open(user_final_file, "r", encoding="utf-8") as file:
+            if file_type == "m3u" or not file_type:
+                result_file = os.path.splitext(user_final_file)[0] + ".m3u"
+            if file_type != "txt" and show_content == False:
+                return send_file(result_file, as_attachment=True)
+        with open(result_file, "r", encoding="utf-8") as file:
             content = file.read()
     else:
-        content = "🔍️正在更新，请耐心等待更新完成..."
+        content = constants.waiting_tip
     return render_template_string(
         "<head><link rel='icon' href='{{ url_for('static', filename='images/favicon.ico') }}' type='image/x-icon'></head><pre>{{ content }}</pre>",
         content=content,
@@ -452,7 +475,7 @@ def add_url_info(url, info):
     Add url info to the URL
     """
     if info:
-        separator = "|" if "$" in url else "$"
+        separator = "-" if "$" in url else "$"
         url += f"{separator}{info}"
     return url
 
@@ -469,7 +492,7 @@ def remove_cache_info(str):
     """
     Remove the cache info from the string
     """
-    return re.sub(r"cache:.*|\|cache:.*", "", str)
+    return re.sub(r"[^a-zA-Z\u4e00-\u9fa5\$]?cache:.*", "", str)
 
 
 def resource_path(relative_path, persistent=False):
@@ -503,3 +526,52 @@ def write_content_into_txt(content, path=None, newline=True, callback=None):
 
     if callback:
         callback()
+
+
+def get_name_url(content, pattern, multiline=False, check_url=True):
+    """
+    Get name and url from content
+    """
+    flag = re.MULTILINE if multiline else 0
+    matches = re.findall(pattern, content, flag)
+    channels = [
+        {"name": match[0].strip(), "url": match[1].strip()}
+        for match in matches
+        if (check_url and match[1].strip()) or not check_url
+    ]
+    return channels
+
+
+def get_whitelist_urls():
+    """
+    Get the whitelist urls
+    """
+    whitelist_file = resource_path(constants.whitelist_path)
+    urls = []
+    url_pattern = constants.url_pattern
+    if os.path.exists(whitelist_file):
+        with open(whitelist_file, "r", encoding="utf-8") as f:
+            for line in f:
+                match = re.search(url_pattern, line)
+                if match:
+                    urls.append(match.group().strip())
+    return urls
+
+
+def get_whitelist_name_urls():
+    """
+    Get the whitelist name urls
+    """
+    whitelist_file = resource_path(constants.whitelist_path)
+    name_urls = defaultdict(list)
+    txt_pattern = constants.txt_pattern
+    if os.path.exists(whitelist_file):
+        with open(whitelist_file, "r", encoding="utf-8") as f:
+            for line in f:
+                name_url = get_name_url(line, pattern=txt_pattern)
+                if name_url and name_url[0]:
+                    name = name_url[0]["name"]
+                    url = name_url[0]["url"]
+                    if url not in name_urls[name]:
+                        name_urls[name].append(url)
+    return name_urls

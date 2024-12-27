@@ -1,5 +1,5 @@
 #EXTM3U x-tvg-url="https://live.fanmingming.com/e.xml"
-#EXTINF:-1 tvg-name="2024-12-27 18:58:39" tvg-logo="https://live.fanmingming.com/tv/2024-12-27 18:58:39.png" group-title="更新时间",2024-12-27 18:58:39
+#EXTINF:-1 tvg-name="2024-12-28 07:34:51" tvg-logo="https://live.fanmingming.com/tv/2024-12-28 07:34:51.png" group-title="更新时间",2024-12-28 07:34:51
 url
 #EXTINF:-1 tvg-name="CCTV1" tvg-logo="https://live.fanmingming.com/tv/CCTV1.png" group-title="📺央视频道",CCTV-1
 http://[2409:8087:1a0a:df::4031]:80/wh7f454c46tw705163907_345094122/ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221226016/index.m3u8$订阅源-IPv6
@@ -349,166 +349,6 @@ http://[2409:8087:1a01:df::7005]/ottrrs.hl.chinamobile.com/PLTV/2/224/3221225739
 http://[2409:8087:1a0a:df::404b]:80/ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221226313/index.m3u8$订阅源-IPv6
 #EXTINF:-1 tvg-name="浙江少儿" tvg-logo="https://live.fanmingming.com/tv/浙江少儿.png" group-title="☘️浙江频道",浙江少儿
 https://ct-m-l.cztv.com/channels/lantian/channel008/1080p.m3u8$订阅源
-#EXTINF:-1 tvg-name="浙江青田" tvg-logo="https://live.fanmingming.com/tv/浙江青田.png" group-title="☘️浙江频道",浙江青田
-http://l.cztvcloud.com/channels/lantian/SXqingtian1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="诸暨新闻综合" tvg-logo="https://live.fanmingming.com/tv/诸暨新闻综合.png" group-title="☘️浙江频道",诸暨新闻综合
-http://l.cztvcloud.com/channels/lantian/SXzhuji3/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="诸暨新闻综合" tvg-logo="https://live.fanmingming.com/tv/诸暨新闻综合.png" group-title="☘️浙江频道",诸暨新闻综合
-http://l.cztvcloud.com/channels/lantian/SXzhuji3/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="龙游生活娱乐" tvg-logo="https://live.fanmingming.com/tv/龙游生活娱乐.png" group-title="☘️浙江频道",龙游生活娱乐
-http://l.cztvcloud.com/channels/lantian/SXlongyou2/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="龙游生活娱乐" tvg-logo="https://live.fanmingming.com/tv/龙游生活娱乐.png" group-title="☘️浙江频道",龙游生活娱乐
-http://l.cztvcloud.com/channels/lantian/SXlongyou2/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="龙游新闻综合" tvg-logo="https://live.fanmingming.com/tv/龙游新闻综合.png" group-title="☘️浙江频道",龙游新闻综合
-http://l.cztvcloud.com/channels/lantian/SXlongyou1/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="龙游新闻综合" tvg-logo="https://live.fanmingming.com/tv/龙游新闻综合.png" group-title="☘️浙江频道",龙游新闻综合
-http://l.cztvcloud.com/channels/lantian/SXlongyou1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="龙泉新闻综合" tvg-logo="https://live.fanmingming.com/tv/龙泉新闻综合.png" group-title="☘️浙江频道",龙泉新闻综合
-http://l.cztvcloud.com/channels/lantian/SXlongquan1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="龙泉新闻综合" tvg-logo="https://live.fanmingming.com/tv/龙泉新闻综合.png" group-title="☘️浙江频道",龙泉新闻综合
-http://l.cztvcloud.com/channels/lantian/SXlongquan1/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="遂昌综合" tvg-logo="https://live.fanmingming.com/tv/遂昌综合.png" group-title="☘️浙江频道",遂昌综合
-http://l.cztvcloud.com/channels/lantian/SXsuichang1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="遂昌综合" tvg-logo="https://live.fanmingming.com/tv/遂昌综合.png" group-title="☘️浙江频道",遂昌综合
-http://l.cztvcloud.com/channels/lantian/SXsuichang1/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="遂昌新闻综合" tvg-logo="https://live.fanmingming.com/tv/遂昌新闻综合.png" group-title="☘️浙江频道",遂昌新闻综合
-http://l.cztvcloud.com/channels/lantian/SXsuichang1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="象山综合" tvg-logo="https://live.fanmingming.com/tv/象山综合.png" group-title="☘️浙江频道",象山综合
-http://l.cztvcloud.com/channels/lantian/SXxiangshan1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="象山综合" tvg-logo="https://live.fanmingming.com/tv/象山综合.png" group-title="☘️浙江频道",象山综合
-http://l.cztvcloud.com/channels/lantian/SXxiangshan1/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="象山电视台新闻综合" tvg-logo="https://live.fanmingming.com/tv/象山电视台新闻综合.png" group-title="☘️浙江频道",象山电视台新闻综合
-http://l.cztvcloud.com/channels/lantian/SXxiangshan1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="象山新闻综合" tvg-logo="https://live.fanmingming.com/tv/象山新闻综合.png" group-title="☘️浙江频道",象山新闻综合
-http://l.cztvcloud.com/channels/lantian/SXxiangshan1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="衢江新闻综合" tvg-logo="https://live.fanmingming.com/tv/衢江新闻综合.png" group-title="☘️浙江频道",衢江新闻综合
-http://l.cztvcloud.com/channels/lantian/SXqujiang1/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="衢江新闻综合" tvg-logo="https://live.fanmingming.com/tv/衢江新闻综合.png" group-title="☘️浙江频道",衢江新闻综合
-http://l.cztvcloud.com/channels/lantian/SXqujiang1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="萧山生活" tvg-logo="https://live.fanmingming.com/tv/萧山生活.png" group-title="☘️浙江频道",萧山生活
-http://l.cztvcloud.com/channels/lantian/SXxiaoshan2/720p.m3u8?zzhed?$订阅源
-#EXTINF:-1 tvg-name="萧山生活" tvg-logo="https://live.fanmingming.com/tv/萧山生活.png" group-title="☘️浙江频道",萧山生活
-http://l.cztvcloud.com/channels/lantian/SXxiaoshan2/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="萧山新闻综合" tvg-logo="https://live.fanmingming.com/tv/萧山新闻综合.png" group-title="☘️浙江频道",萧山新闻综合
-http://l.cztvcloud.com/channels/lantian/SXxiaoshan1/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="苍南新闻综合" tvg-logo="https://live.fanmingming.com/tv/苍南新闻综合.png" group-title="☘️浙江频道",苍南新闻综合
-http://l.cztvcloud.com/channels/lantian/SXcangnan1/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="苍南新闻综合" tvg-logo="https://live.fanmingming.com/tv/苍南新闻综合.png" group-title="☘️浙江频道",苍南新闻综合
-http://l.cztvcloud.com/channels/lantian/SXcangnan1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="缙云综合" tvg-logo="https://live.fanmingming.com/tv/缙云综合.png" group-title="☘️浙江频道",缙云综合
-http://l.cztvcloud.com/channels/lantian/SXjinyun1/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="缙云综合" tvg-logo="https://live.fanmingming.com/tv/缙云综合.png" group-title="☘️浙江频道",缙云综合
-http://l.cztvcloud.com/channels/lantian/SXjinyun1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="缙云综合" tvg-logo="https://live.fanmingming.com/tv/缙云综合.png" group-title="☘️浙江频道",缙云综合
-http://l.cztvcloud.com/channels/lantian/SXjinyun1/720p.m3u8?zzhed?$订阅源
-#EXTINF:-1 tvg-name="缙云新闻综合" tvg-logo="https://live.fanmingming.com/tv/缙云新闻综合.png" group-title="☘️浙江频道",缙云新闻综合
-http://l.cztvcloud.com/channels/lantian/SXjinyun1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="洞头综合" tvg-logo="https://live.fanmingming.com/tv/洞头综合.png" group-title="☘️浙江频道",洞头综合
-http://l.cztvcloud.com/channels/lantian/SXdongtou1/720p.m3u8?zzhed?$订阅源
-#EXTINF:-1 tvg-name="永嘉新闻综合" tvg-logo="https://live.fanmingming.com/tv/永嘉新闻综合.png" group-title="☘️浙江频道",永嘉新闻综合
-http://l.cztvcloud.com/channels/lantian/SXyongjia1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="永嘉新闻综合" tvg-logo="https://live.fanmingming.com/tv/永嘉新闻综合.png" group-title="☘️浙江频道",永嘉新闻综合
-http://l.cztvcloud.com/channels/lantian/SXyongjia1/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="武义新闻综合" tvg-logo="https://live.fanmingming.com/tv/武义新闻综合.png" group-title="☘️浙江频道",武义新闻综合
-http://l.cztvcloud.com/channels/lantian/SXwuyi1/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="武义新闻综合" tvg-logo="https://live.fanmingming.com/tv/武义新闻综合.png" group-title="☘️浙江频道",武义新闻综合
-http://l.cztvcloud.com/channels/lantian/SXwuyi1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="松阳综合" tvg-logo="https://live.fanmingming.com/tv/松阳综合.png" group-title="☘️浙江频道",松阳综合
-http://l.cztvcloud.com/channels/lantian/SXsongyang1/720p.m3u8?zzhed?$订阅源
-#EXTINF:-1 tvg-name="松阳综合" tvg-logo="https://live.fanmingming.com/tv/松阳综合.png" group-title="☘️浙江频道",松阳综合
-http://l.cztvcloud.com/channels/lantian/SXsongyang1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="松阳综合" tvg-logo="https://live.fanmingming.com/tv/松阳综合.png" group-title="☘️浙江频道",松阳综合
-http://l.cztvcloud.com/channels/lantian/SXsongyang1/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="松阳新闻综合" tvg-logo="https://live.fanmingming.com/tv/松阳新闻综合.png" group-title="☘️浙江频道",松阳新闻综合
-http://l.cztvcloud.com/channels/lantian/SXsongyang1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="普陀新闻综合" tvg-logo="https://live.fanmingming.com/tv/普陀新闻综合.png" group-title="☘️浙江频道",普陀新闻综合
-http://l.cztvcloud.com/channels/lantian/SXputuo1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="普陀新闻综合" tvg-logo="https://live.fanmingming.com/tv/普陀新闻综合.png" group-title="☘️浙江频道",普陀新闻综合
-http://l.cztvcloud.com/channels/lantian/SXputuo1/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="新昌生活" tvg-logo="https://live.fanmingming.com/tv/新昌生活.png" group-title="☘️浙江频道",新昌生活
-http://l.cztvcloud.com/channels/lantian/SXxinchang2/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="文成综合" tvg-logo="https://live.fanmingming.com/tv/文成综合.png" group-title="☘️浙江频道",文成综合
-http://l.cztvcloud.com/channels/lantian/SXwencheng1/720p.m3u8?zzhed?$订阅源
-#EXTINF:-1 tvg-name="文成综合" tvg-logo="https://live.fanmingming.com/tv/文成综合.png" group-title="☘️浙江频道",文成综合
-http://l.cztvcloud.com/channels/lantian/SXwencheng1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="文成综合" tvg-logo="https://live.fanmingming.com/tv/文成综合.png" group-title="☘️浙江频道",文成综合
-http://l.cztvcloud.com/channels/lantian/SXwencheng1/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="文成新闻综合" tvg-logo="https://live.fanmingming.com/tv/文成新闻综合.png" group-title="☘️浙江频道",文成新闻综合
-http://l.cztvcloud.com/channels/lantian/SXwencheng1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="开化新闻综合" tvg-logo="https://live.fanmingming.com/tv/开化新闻综合.png" group-title="☘️浙江频道",开化新闻综合
-http://l.cztvcloud.com/channels/lantian/SXkaihua1/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="开化新闻综合" tvg-logo="https://live.fanmingming.com/tv/开化新闻综合.png" group-title="☘️浙江频道",开化新闻综合
-http://l.cztvcloud.com/channels/lantian/SXkaihua1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="开化国家公园" tvg-logo="https://live.fanmingming.com/tv/开化国家公园.png" group-title="☘️浙江频道",开化国家公园
-http://l.cztvcloud.com/channels/lantian/SXkaihua2/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="开化国家公园" tvg-logo="https://live.fanmingming.com/tv/开化国家公园.png" group-title="☘️浙江频道",开化国家公园
-http://l.cztvcloud.com/channels/lantian/SXkaihua2/720p.m3u8zzhed$订阅源
-#EXTINF:-1 tvg-name="开化国家公园" tvg-logo="https://live.fanmingming.com/tv/开化国家公园.png" group-title="☘️浙江频道",开化国家公园
-http://l.cztvcloud.com/channels/lantian/SXkaihua2/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="庆元综合" tvg-logo="https://live.fanmingming.com/tv/庆元综合.png" group-title="☘️浙江频道",庆元综合
-http://l.cztvcloud.com/channels/lantian/SXqingyuan1/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="庆元综合" tvg-logo="https://live.fanmingming.com/tv/庆元综合.png" group-title="☘️浙江频道",庆元综合
-http://l.cztvcloud.com/channels/lantian/SXqingyuan1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="庆元综合" tvg-logo="https://live.fanmingming.com/tv/庆元综合.png" group-title="☘️浙江频道",庆元综合
-http://l.cztvcloud.com/channels/lantian/SXqingyuan1/720p.m3u8?zzhed?$订阅源
-#EXTINF:-1 tvg-name="庆元新闻综合" tvg-logo="https://live.fanmingming.com/tv/庆元新闻综合.png" group-title="☘️浙江频道",庆元新闻综合
-http://l.cztvcloud.com/channels/lantian/SXqingyuan1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="平湖民生休闲" tvg-logo="https://live.fanmingming.com/tv/平湖民生休闲.png" group-title="☘️浙江频道",平湖民生休闲
-http://l.cztvcloud.com/channels/lantian/SXpinghu2/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="平湖民生休闲" tvg-logo="https://live.fanmingming.com/tv/平湖民生休闲.png" group-title="☘️浙江频道",平湖民生休闲
-http://l.cztvcloud.com/channels/lantian/SXpinghu2/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="平湖新闻综合" tvg-logo="https://live.fanmingming.com/tv/平湖新闻综合.png" group-title="☘️浙江频道",平湖新闻综合
-http://l.cztvcloud.com/channels/lantian/SXpinghu1/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="平湖新闻综合" tvg-logo="https://live.fanmingming.com/tv/平湖新闻综合.png" group-title="☘️浙江频道",平湖新闻综合
-http://l.cztvcloud.com/channels/lantian/SXpinghu1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="嵊泗综合" tvg-logo="https://live.fanmingming.com/tv/嵊泗综合.png" group-title="☘️浙江频道",嵊泗综合
-http://l.cztvcloud.com/channels/lantian/SXshengzhou1/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="嵊泗综合" tvg-logo="https://live.fanmingming.com/tv/嵊泗综合.png" group-title="☘️浙江频道",嵊泗综合
-http://l.cztvcloud.com/channels/lantian/SXshengsi1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="嵊泗综合" tvg-logo="https://live.fanmingming.com/tv/嵊泗综合.png" group-title="☘️浙江频道",嵊泗综合
-http://l.cztvcloud.com/channels/lantian/SXshengzhou1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="嵊泗新闻综合" tvg-logo="https://live.fanmingming.com/tv/嵊泗新闻综合.png" group-title="☘️浙江频道",嵊泗新闻综合
-http://l.cztvcloud.com/channels/lantian/SXshengsi1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="兰溪新闻综合" tvg-logo="https://live.fanmingming.com/tv/兰溪新闻综合.png" group-title="☘️浙江频道",兰溪新闻综合
-http://l.cztvcloud.com/channels/lantian/SXlanxi1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="兰溪新闻综合" tvg-logo="https://live.fanmingming.com/tv/兰溪新闻综合.png" group-title="☘️浙江频道",兰溪新闻综合
-http://l.cztvcloud.com/channels/lantian/SXlanxi1/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="余杭综合" tvg-logo="https://live.fanmingming.com/tv/余杭综合.png" group-title="☘️浙江频道",余杭综合
-http://l.cztvcloud.com/channels/lantian/SXyuhang1/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="余杭未来E" tvg-logo="https://live.fanmingming.com/tv/余杭未来E.png" group-title="☘️浙江频道",余杭未来E
-http://l.cztvcloud.com/channels/lantian/SXyuhang3/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="余姚综合" tvg-logo="https://live.fanmingming.com/tv/余姚综合.png" group-title="☘️浙江频道",余姚综合
-http://l.cztvcloud.com/channels/lantian/SXyuyao1/720p.m3u8?$订阅源
-#EXTINF:-1 tvg-name="余姚综合" tvg-logo="https://live.fanmingming.com/tv/余姚综合.png" group-title="☘️浙江频道",余姚综合
-http://l.cztvcloud.com/channels/lantian/SXyuyao1/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="余姚综合" tvg-logo="https://live.fanmingming.com/tv/余姚综合.png" group-title="☘️浙江频道",余姚综合
-http://l.cztvcloud.com/channels/lantian/SXyuyao1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="余姚姚江文化" tvg-logo="https://live.fanmingming.com/tv/余姚姚江文化.png" group-title="☘️浙江频道",余姚姚江文化
-http://l.cztvcloud.com/channels/lantian/SXyuyao3/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="余姚姚江文化" tvg-logo="https://live.fanmingming.com/tv/余姚姚江文化.png" group-title="☘️浙江频道",余姚姚江文化
-http://l.cztvcloud.com/channels/lantian/SXyuyao3/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="余姚姚江文化" tvg-logo="https://live.fanmingming.com/tv/余姚姚江文化.png" group-title="☘️浙江频道",余姚姚江文化
-http://l.cztvcloud.com/channels/lantian/SXyuyao3/720p.m3u8zzhed$订阅源
-#EXTINF:-1 tvg-name="云和新闻综合" tvg-logo="https://live.fanmingming.com/tv/云和新闻综合.png" group-title="☘️浙江频道",云和新闻综合
-http://l.cztvcloud.com/channels/lantian/SXyunhe1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="云和新闻综合" tvg-logo="https://live.fanmingming.com/tv/云和新闻综合.png" group-title="☘️浙江频道",云和新闻综合
-http://l.cztvcloud.com/channels/lantian/SXyunhe1/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="东阳影视生活" tvg-logo="https://live.fanmingming.com/tv/东阳影视生活.png" group-title="☘️浙江频道",东阳影视生活
-http://l.cztvcloud.com/channels/lantian/SXdongyang1/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="上虞新闻综合" tvg-logo="https://live.fanmingming.com/tv/上虞新闻综合.png" group-title="☘️浙江频道",上虞新闻综合
-http://l.cztvcloud.com/channels/lantian/SXshangyu1/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="上虞新商都" tvg-logo="https://live.fanmingming.com/tv/上虞新商都.png" group-title="☘️浙江频道",上虞新商都
-http://l.cztvcloud.com/channels/lantian/SXshangyu3/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="上虞新商都" tvg-logo="https://live.fanmingming.com/tv/上虞新商都.png" group-title="☘️浙江频道",上虞新商都
-http://l.cztvcloud.com/channels/lantian/SXshangyu3/720p.m3u8?zzhed?$订阅源
-#EXTINF:-1 tvg-name="上虞文化影院" tvg-logo="https://live.fanmingming.com/tv/上虞文化影院.png" group-title="☘️浙江频道",上虞文化影院
-http://l.cztvcloud.com/channels/lantian/SXshangyu2/720p.m3u8zzhed$订阅源
-#EXTINF:-1 tvg-name="上虞文化影院" tvg-logo="https://live.fanmingming.com/tv/上虞文化影院.png" group-title="☘️浙江频道",上虞文化影院
-http://l.cztvcloud.com/channels/lantian/SXshangyu2/720p.m3u8?zzhed$订阅源
-#EXTINF:-1 tvg-name="上虞文化影院" tvg-logo="https://live.fanmingming.com/tv/上虞文化影院.png" group-title="☘️浙江频道",上虞文化影院
-http://l.cztvcloud.com/channels/lantian/SXshangyu2/720p.m3u8$订阅源
-#EXTINF:-1 tvg-name="上虞文化影视" tvg-logo="https://live.fanmingming.com/tv/上虞文化影视.png" group-title="☘️浙江频道",上虞文化影视
-http://l.cztvcloud.com/channels/lantian/SXshangyu2/720p.m3u8$订阅源
 #EXTINF:-1 tvg-name="北京科教" tvg-logo="https://live.fanmingming.com/tv/北京科教.png" group-title="☘️北京频道",北京科教
 http://[2409:8087:1a01:df::7005]/ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221225729/index.m3u8$订阅源-IPv6
 #EXTINF:-1 tvg-name="七彩戏剧" tvg-logo="https://live.fanmingming.com/tv/七彩戏剧.png" group-title="☘️上海频道",七彩戏剧
@@ -563,8 +403,6 @@ http://[2409:8087:1a0b:df::4001]:80/ottrrs.hl.chinamobile.com/TVOD/88888888/224/
 http://[2409:8087:5e08:24::11]:6610/000000001000/5000000011000031123/1.m3u8?channel-id=bestzb&Contentid=5000000011000031123&livemode=1&stbId=3$订阅源-IPv6
 #EXTINF:-1 tvg-name="哈哈炫动" tvg-logo="https://live.fanmingming.com/tv/哈哈炫动.png" group-title="☘️上海频道",哈哈炫动
 http://[2409:8087:74d9:21::6]:80/270000001128/9900000069/index.m3u8$订阅源-IPv6
-#EXTINF:-1 tvg-name="崇明电视台" tvg-logo="https://live.fanmingming.com/tv/崇明电视台.png" group-title="☘️上海频道",崇明电视台
-https://pili-live-hls.wdit.com.cn/wditlive/c038f4fafbdf4f97ba74c74ad67259b931ee.m3u8$订阅源
 #EXTINF:-1 tvg-name="新闻综合" tvg-logo="https://live.fanmingming.com/tv/新闻综合.png" group-title="☘️上海频道",新闻综合
 http://[2409:8087:74d9:21::6]:80/000000001000PLTV/88888888/224/3221226620/index.m3u8$订阅源-IPv6
 #EXTINF:-1 tvg-name="新闻综合" tvg-logo="https://live.fanmingming.com/tv/新闻综合.png" group-title="☘️上海频道",新闻综合
@@ -821,6 +659,12 @@ http://[2409:8087:1a01:df::7005]/ottrrs.hl.chinamobile.com/PLTV/88888888/224/322
 http://[2409:8087:1a01:df::7005]/ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221226555/index.m3u8$订阅源-IPv6
 #EXTINF:-1 tvg-name="双鸭山综合" tvg-logo="https://live.fanmingming.com/tv/双鸭山综合.png" group-title="☘️黑龙江频道",双鸭山综合
 http://[2409:8087:1a01:df::7005]/ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221226529/index.m3u8$订阅源-IPv6
+#EXTINF:-1 tvg-name="翡翠台" tvg-logo="https://live.fanmingming.com/tv/翡翠台.png" group-title="🌊港·澳·台",翡翠台
+https://aktv.top/AKTV/live/aktv/null-16/AKTV.m3u8$订阅源
+#EXTINF:-1 tvg-name="凤凰中文" tvg-logo="https://live.fanmingming.com/tv/凤凰中文.png" group-title="🌊港·澳·台",凤凰中文
+https://aktv.top/AKTV/live/aktv/null-3/AKTV.m3u8$订阅源
+#EXTINF:-1 tvg-name="凤凰香港" tvg-logo="https://live.fanmingming.com/tv/凤凰香港.png" group-title="🌊港·澳·台",凤凰香港
+https://aktv.top/AKTV/live/aktv/null-5/AKTV.m3u8$订阅源
 #EXTINF:-1 tvg-name="CHC家庭影院" tvg-logo="https://live.fanmingming.com/tv/CHC家庭影院.png" group-title="🎬电影频道",CHC家庭影院
 http://[2409:8087:4c0a:22:1::11]:6410/170000001115/UmaiCHAN63807601b19dd/index.m3u8?m3u8_level=2$订阅源-IPv6
 #EXTINF:-1 tvg-name="CHC家庭影院" tvg-logo="https://live.fanmingming.com/tv/CHC家庭影院.png" group-title="🎬电影频道",CHC家庭影院
@@ -851,6 +695,96 @@ http://[2409:8087:1a01:df::7005]/ottrrs.hl.chinamobile.com/PLTV/88888888/224/322
 http://[2409:8087:1a01:df::4001]:80/TVOD/88888888/224/3221225681/main.m3u8$订阅源-IPv6
 #EXTINF:-1 tvg-name="黑莓电影" tvg-logo="https://live.fanmingming.com/tv/黑莓电影.png" group-title="🎬电影频道",黑莓电影
 http://[2409:8087:1a01:df::7005]/ottrrs.hl.chinamobile.com/PLTV/2/224/3221225743/2.m3u8$订阅源-IPv6
+#EXTINF:-1 tvg-name="咪咕直播1" tvg-logo="https://live.fanmingming.com/tv/咪咕直播1.png" group-title="🎥咪咕直播",咪咕直播1
+http://111.13.111.242/000000001000/3000000001000005308/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播2" tvg-logo="https://live.fanmingming.com/tv/咪咕直播2.png" group-title="🎥咪咕直播",咪咕直播2
+http://111.13.111.242/000000001000/3000000001000005969/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播3" tvg-logo="https://live.fanmingming.com/tv/咪咕直播3.png" group-title="🎥咪咕直播",咪咕直播3
+http://111.13.111.242/000000001000/3000000001000007218/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播4" tvg-logo="https://live.fanmingming.com/tv/咪咕直播4.png" group-title="🎥咪咕直播",咪咕直播4
+http://111.13.111.242/000000001000/3000000001000008001/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播5" tvg-logo="https://live.fanmingming.com/tv/咪咕直播5.png" group-title="🎥咪咕直播",咪咕直播5
+http://111.13.111.242/000000001000/3000000001000008176/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播6" tvg-logo="https://live.fanmingming.com/tv/咪咕直播6.png" group-title="🎥咪咕直播",咪咕直播6
+http://111.13.111.242/000000001000/3000000001000008379/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播7" tvg-logo="https://live.fanmingming.com/tv/咪咕直播7.png" group-title="🎥咪咕直播",咪咕直播7
+http://111.13.111.242/000000001000/3000000001000010129/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播8" tvg-logo="https://live.fanmingming.com/tv/咪咕直播8.png" group-title="🎥咪咕直播",咪咕直播8
+http://111.13.111.242/000000001000/3000000001000010948/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播9" tvg-logo="https://live.fanmingming.com/tv/咪咕直播9.png" group-title="🎥咪咕直播",咪咕直播9
+http://111.13.111.242/000000001000/3000000001000026778/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播10" tvg-logo="https://live.fanmingming.com/tv/咪咕直播10.png" group-title="🎥咪咕直播",咪咕直播10
+http://111.13.111.242/000000001000/3000000001000028638/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播11" tvg-logo="https://live.fanmingming.com/tv/咪咕直播11.png" group-title="🎥咪咕直播",咪咕直播11
+http://111.13.111.242/000000001000/3000000001000031494/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播12" tvg-logo="https://live.fanmingming.com/tv/咪咕直播12.png" group-title="🎥咪咕直播",咪咕直播12
+http://111.13.111.242/000000001000/3000000010000000097/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播13" tvg-logo="https://live.fanmingming.com/tv/咪咕直播13.png" group-title="🎥咪咕直播",咪咕直播13
+http://111.13.111.242/000000001000/3000000010000002019/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播14" tvg-logo="https://live.fanmingming.com/tv/咪咕直播14.png" group-title="🎥咪咕直播",咪咕直播14
+http://111.13.111.242/000000001000/3000000010000002032/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播15" tvg-logo="https://live.fanmingming.com/tv/咪咕直播15.png" group-title="🎥咪咕直播",咪咕直播15
+http://111.13.111.242/000000001000/3000000010000002809/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播16" tvg-logo="https://live.fanmingming.com/tv/咪咕直播16.png" group-title="🎥咪咕直播",咪咕直播16
+http://111.13.111.242/000000001000/3000000010000003915/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播17" tvg-logo="https://live.fanmingming.com/tv/咪咕直播17.png" group-title="🎥咪咕直播",咪咕直播17
+http://111.13.111.242/000000001000/3000000010000004193/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播18" tvg-logo="https://live.fanmingming.com/tv/咪咕直播18.png" group-title="🎥咪咕直播",咪咕直播18
+http://111.13.111.242/000000001000/3000000010000004464/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播19" tvg-logo="https://live.fanmingming.com/tv/咪咕直播19.png" group-title="🎥咪咕直播",咪咕直播19
+http://111.13.111.242/000000001000/3000000010000005837/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播20" tvg-logo="https://live.fanmingming.com/tv/咪咕直播20.png" group-title="🎥咪咕直播",咪咕直播20
+http://111.13.111.242/000000001000/3000000010000006077/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播21" tvg-logo="https://live.fanmingming.com/tv/咪咕直播21.png" group-title="🎥咪咕直播",咪咕直播21
+http://111.13.111.242/000000001000/3000000010000006658/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播22" tvg-logo="https://live.fanmingming.com/tv/咪咕直播22.png" group-title="🎥咪咕直播",咪咕直播22
+http://111.13.111.242/000000001000/3000000010000006944/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播23" tvg-logo="https://live.fanmingming.com/tv/咪咕直播23.png" group-title="🎥咪咕直播",咪咕直播23
+http://111.13.111.242/000000001000/3000000010000007692/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播24" tvg-logo="https://live.fanmingming.com/tv/咪咕直播24.png" group-title="🎥咪咕直播",咪咕直播24
+http://111.13.111.242/000000001000/3000000010000009788/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播25" tvg-logo="https://live.fanmingming.com/tv/咪咕直播25.png" group-title="🎥咪咕直播",咪咕直播25
+http://111.13.111.242/000000001000/3000000010000010833/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播26" tvg-logo="https://live.fanmingming.com/tv/咪咕直播26.png" group-title="🎥咪咕直播",咪咕直播26
+http://111.13.111.242/000000001000/3000000010000011112/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播27" tvg-logo="https://live.fanmingming.com/tv/咪咕直播27.png" group-title="🎥咪咕直播",咪咕直播27
+http://111.13.111.242/000000001000/3000000010000011297/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播28" tvg-logo="https://live.fanmingming.com/tv/咪咕直播28.png" group-title="🎥咪咕直播",咪咕直播28
+http://111.13.111.242/000000001000/3000000010000011518/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播29" tvg-logo="https://live.fanmingming.com/tv/咪咕直播29.png" group-title="🎥咪咕直播",咪咕直播29
+http://111.13.111.242/000000001000/3000000010000011763/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播30" tvg-logo="https://live.fanmingming.com/tv/咪咕直播30.png" group-title="🎥咪咕直播",咪咕直播30
+http://111.13.111.242/000000001000/3000000010000011873/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播31" tvg-logo="https://live.fanmingming.com/tv/咪咕直播31.png" group-title="🎥咪咕直播",咪咕直播31
+http://111.13.111.242/000000001000/3000000010000012398/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播32" tvg-logo="https://live.fanmingming.com/tv/咪咕直播32.png" group-title="🎥咪咕直播",咪咕直播32
+http://111.13.111.242/000000001000/3000000010000012450/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播33" tvg-logo="https://live.fanmingming.com/tv/咪咕直播33.png" group-title="🎥咪咕直播",咪咕直播33
+http://111.13.111.242/000000001000/3000000010000012558/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播34" tvg-logo="https://live.fanmingming.com/tv/咪咕直播34.png" group-title="🎥咪咕直播",咪咕直播34
+http://111.13.111.242/000000001000/3000000010000012616/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播35" tvg-logo="https://live.fanmingming.com/tv/咪咕直播35.png" group-title="🎥咪咕直播",咪咕直播35
+http://111.13.111.242/000000001000/3000000010000015470/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播36" tvg-logo="https://live.fanmingming.com/tv/咪咕直播36.png" group-title="🎥咪咕直播",咪咕直播36
+http://111.13.111.242/000000001000/3000000010000015560/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播37" tvg-logo="https://live.fanmingming.com/tv/咪咕直播37.png" group-title="🎥咪咕直播",咪咕直播37
+http://111.13.111.242/000000001000/3000000010000017389/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播38" tvg-logo="https://live.fanmingming.com/tv/咪咕直播38.png" group-title="🎥咪咕直播",咪咕直播38
+http://111.13.111.242/000000001000/3000000010000017678/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播39" tvg-logo="https://live.fanmingming.com/tv/咪咕直播39.png" group-title="🎥咪咕直播",咪咕直播39
+http://111.13.111.242/000000001000/3000000010000017997/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播40" tvg-logo="https://live.fanmingming.com/tv/咪咕直播40.png" group-title="🎥咪咕直播",咪咕直播40
+http://111.13.111.242/000000001000/3000000010000019380/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播41" tvg-logo="https://live.fanmingming.com/tv/咪咕直播41.png" group-title="🎥咪咕直播",咪咕直播41
+http://111.13.111.242/000000001000/3000000010000019839/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播42" tvg-logo="https://live.fanmingming.com/tv/咪咕直播42.png" group-title="🎥咪咕直播",咪咕直播42
+http://111.13.111.242/000000001000/3000000010000020168/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播43" tvg-logo="https://live.fanmingming.com/tv/咪咕直播43.png" group-title="🎥咪咕直播",咪咕直播43
+http://111.13.111.242/000000001000/3000000010000021904/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播44" tvg-logo="https://live.fanmingming.com/tv/咪咕直播44.png" group-title="🎥咪咕直播",咪咕直播44
+http://111.13.111.242/000000001000/3000000010000023434/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
+#EXTINF:-1 tvg-name="咪咕直播45" tvg-logo="https://live.fanmingming.com/tv/咪咕直播45.png" group-title="🎥咪咕直播",咪咕直播45
+http://111.13.111.242/000000001000/3000000010000024205/index.m3u8?channel-id=FifastbLive&livemode=1&stbId=3&HlsProfileId=$订阅源
 #EXTINF:-1 tvg-name="CCTV5" tvg-logo="https://live.fanmingming.com/tv/CCTV5.png" group-title="🏀体育频道",CCTV-5
 http://[2409:8087:1a01:df::7005]:80/ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221226019/index.m3u8$订阅源-IPv6
 #EXTINF:-1 tvg-name="CCTV5" tvg-logo="https://live.fanmingming.com/tv/CCTV5.png" group-title="🏀体育频道",CCTV-5

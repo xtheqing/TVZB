@@ -6,6 +6,7 @@ import os
 import pickle
 import re
 from collections import defaultdict
+from logging import INFO
 
 from bs4 import NavigableString
 from opencc import OpenCC
@@ -15,18 +16,21 @@ from utils.config import config
 from utils.speed import (
     get_speed,
     sort_urls,
+    check_ffmpeg_installed_status
 )
 from utils.tools import (
     get_name_url,
-    check_url_by_patterns,
+    check_url_by_keywords,
+    check_url_ipv_type,
     get_total_urls,
     process_nested_dict,
     add_url_info,
     remove_cache_info,
     resource_path,
     write_content_into_txt,
-    get_whitelist_urls,
-    get_whitelist_name_urls
+    get_urls_from_file,
+    get_name_urls_from_file,
+    get_logger,
 )
 
 
@@ -52,12 +56,12 @@ def get_channel_data_from_file(channels, file, use_old, whitelist):
                     category_dict[name] = []
                 if name in whitelist:
                     for whitelist_url in whitelist[name]:
-                        category_dict[name].append((whitelist_url, None, None, "important"))
+                        category_dict[name].append((whitelist_url, None, None, "whitelist"))
                 if use_old and url:
                     info = url.partition("$")[2]
                     origin = None
                     if info and info.startswith("!"):
-                        origin = "important"
+                        origin = "whitelist"
                     data = (url, None, None, origin)
                     if data not in category_dict[name]:
                         category_dict[name].append(data)
@@ -70,7 +74,8 @@ def get_channel_items():
     """
     user_source_file = resource_path(config.source_file)
     channels = defaultdict(lambda: defaultdict(list))
-    whitelist = get_whitelist_name_urls()
+    whitelist = get_name_urls_from_file(constants.whitelist_path)
+    whitelist_urls = get_urls_from_file(constants.whitelist_path)
     whitelist_len = len(list(whitelist.keys()))
     if whitelist_len:
         print(f"Found {whitelist_len} channel in whitelist")
@@ -97,6 +102,12 @@ def get_channel_items():
                             if name in old_result[cate]:
                                 for info in old_result[cate][name]:
                                     if info:
+                                        try:
+                                            if info[3] == "whitelist" and not any(
+                                                    url in info[0] for url in whitelist_urls):
+                                                continue
+                                        except:
+                                            pass
                                         pure_url = info[0].partition("$")[0]
                                         if pure_url not in urls:
                                             channels[cate][name].append(info)
@@ -217,6 +228,8 @@ def get_channel_multicast_result(result, search_result):
     """
     info_result = {}
     multicast_name = constants.origin_map["multicast"]
+    whitelist = get_urls_from_file(constants.whitelist_path)
+    blacklist = get_urls_from_file(constants.blacklist_path)
     for name, result_obj in result.items():
         info_list = [
             (
@@ -240,7 +253,10 @@ def get_channel_multicast_result(result, search_result):
             if result_type in search_result[result_region]
             for ip in get_multicast_ip_list(result_type_urls) or []
             for url, date, resolution in search_result[result_region][result_type]
-            if check_url_by_patterns(f"http://{url}/rtp/{ip}")
+            if (whitelist and check_url_by_keywords(f"http://{url}/rtp/{ip}", whitelist)) or
+               (
+                       check_url_ipv_type(f"http://{url}/rtp/{ip}") and not check_url_by_keywords(
+                   f"http://{url}/rtp/{ip}", blacklist))
         ]
         info_result[name] = info_list
     return info_result
@@ -428,7 +444,7 @@ def init_info_data(data, cate, name):
         data[cate][name] = []
 
 
-def append_data_to_info_data(info_data, cate, name, data, origin=None, check=True):
+def append_data_to_info_data(info_data, cate, name, data, origin=None, check=True, whitelist=None, blacklist=None):
     """
     Append channel data to total info data
     """
@@ -441,13 +457,19 @@ def append_data_to_info_data(info_data, cate, name, data, origin=None, check=Tru
             if not url_origin:
                 continue
             if url:
-                pure_url = url.partition("$")[0]
-                if pure_url in urls:
+                url_partition = url.partition("$")
+                pure_url = url_partition[0]
+                url_info = url_partition[2]
+                white_info = url_info and url_info.startswith("!")
+                if (pure_url in urls) and not white_info:
                     continue
+                if white_info or (whitelist and check_url_by_keywords(url, whitelist)):
+                    url_origin = "whitelist"
                 if (
-                        url_origin == "important"
+                        url_origin == "whitelist"
                         or (not check)
-                        or (check and check_url_by_patterns(pure_url))
+                        or (
+                        check and check_url_ipv_type(pure_url) and not check_url_by_keywords(url, blacklist))
                 ):
                     info_data[cate][name].append((url, date, resolution, url_origin))
                     urls.append(pure_url)
@@ -462,7 +484,7 @@ def get_origin_method_name(method):
     return "hotel" if method.startswith("hotel_") else method
 
 
-def append_old_data_to_info_data(info_data, cate, name, data):
+def append_old_data_to_info_data(info_data, cate, name, data, whitelist=None, blacklist=None):
     """
     Append history channel data to total info data
     """
@@ -471,6 +493,8 @@ def append_old_data_to_info_data(info_data, cate, name, data):
         cate,
         name,
         data,
+        whitelist=whitelist,
+        blacklist=blacklist
     )
     print("History:", len(data), end=", ")
 
@@ -495,11 +519,13 @@ def append_total_data(
         ("subscribe", subscribe_result),
         ("online_search", online_search_result),
     ]
+    whitelist = get_urls_from_file(constants.whitelist_path)
+    blacklist = get_urls_from_file(constants.blacklist_path)
     for cate, channel_obj in items:
         for name, old_info_list in channel_obj.items():
             print(f"{name}:", end=" ")
             if config.open_use_old_result and old_info_list:
-                append_old_data_to_info_data(data, cate, name, old_info_list)
+                append_old_data_to_info_data(data, cate, name, old_info_list, whitelist=whitelist, blacklist=blacklist)
             for method, result in total_result:
                 if config.open_method[method]:
                     origin_method = get_origin_method_name(method)
@@ -507,7 +533,7 @@ def append_total_data(
                         continue
                     name_results = get_channel_results_by_name(name, result)
                     append_data_to_info_data(
-                        data, cate, name, name_results, origin=origin_method
+                        data, cate, name, name_results, origin=origin_method, whitelist=whitelist, blacklist=blacklist
                     )
                     print(f"{method.capitalize()}:", len(name_results), end=", ")
             print(
@@ -532,7 +558,7 @@ def append_total_data(
                                 data, extra_cate, name, old_info_list
                             )
                     append_data_to_info_data(
-                        data, extra_cate, name, urls, origin=origin_method
+                        data, extra_cate, name, urls, origin=origin_method, whitelist=whitelist, blacklist=blacklist
                     )
                     print(name, f"{method.capitalize()}:", len(urls), end=", ")
                     print(
@@ -546,23 +572,26 @@ async def process_sort_channel_list(data, ipv6=False, callback=None):
     Process the sort channel list
     """
     ipv6_proxy = None if (not config.open_ipv6 or ipv6) else constants.ipv6_proxy
+    open_filter_resolution = config.open_filter_resolution
+    get_resolution = open_filter_resolution and check_ffmpeg_installed_status()
+    sort_timeout = config.sort_timeout
     need_sort_data = copy.deepcopy(data)
-    whitelist_urls = get_whitelist_urls()
-    if whitelist_urls:
-        print(f"Found {len(whitelist_urls)} whitelist urls")
-    process_nested_dict(need_sort_data, seen=set(whitelist_urls), flag=r"cache:(.*)", force_str="!")
+    process_nested_dict(need_sort_data, seen=set(), flag=r"cache:(.*)", force_str="!")
     result = {}
     semaphore = asyncio.Semaphore(10)
 
-    async def limited_get_speed(info, ipv6_proxy, callback):
+    async def limited_get_speed(info, ipv6_proxy, filter_resolution, timeout, callback):
         async with semaphore:
-            return await get_speed(info[0], ipv6_proxy=ipv6_proxy, callback=callback)
+            return await get_speed(info[0], ipv6_proxy=ipv6_proxy, filter_resolution=filter_resolution, timeout=timeout,
+                                   callback=callback)
 
     tasks = [
         asyncio.create_task(
             limited_get_speed(
                 info,
                 ipv6_proxy=ipv6_proxy,
+                filter_resolution=get_resolution,
+                timeout=sort_timeout,
                 callback=callback,
             )
         )
@@ -571,9 +600,16 @@ async def process_sort_channel_list(data, ipv6=False, callback=None):
         for info in info_list
     ]
     await asyncio.gather(*tasks)
+    logger = get_logger(constants.sort_log_path, level=INFO, init=True)
+    open_supply = config.open_supply
+    open_filter_speed = config.open_filter_speed
+    min_speed = config.min_speed
+    min_resolution = config.min_resolution_value
     for cate, obj in data.items():
         for name, info_list in obj.items():
-            info_list = sort_urls(name, info_list, whitelist=whitelist_urls)
+            info_list = sort_urls(name, info_list, supply=open_supply, filter_speed=open_filter_speed,
+                                  min_speed=min_speed, filter_resolution=open_filter_resolution,
+                                  min_resolution=min_resolution, logger=logger)
             append_data_to_info_data(
                 result,
                 cate,
@@ -581,6 +617,7 @@ async def process_sort_channel_list(data, ipv6=False, callback=None):
                 info_list,
                 check=False,
             )
+    logger.handlers.clear()
     return result
 
 
@@ -588,46 +625,58 @@ def write_channel_to_file(data, ipv6=False, callback=None):
     """
     Write channel to file
     """
-    path = "output/result_new.txt"
-    if config.open_update_time:
-        now = datetime.datetime.now()
-        if os.environ.get("GITHUB_ACTIONS"):
-            now += datetime.timedelta(hours=8)
-        update_time = now.strftime("%Y-%m-%d %H:%M:%S")
-        write_content_into_txt(f"更新时间,#genre#", path, newline=False)
-        write_content_into_txt(f"{update_time},url", path)
-    no_result_name = []
-    open_empty_category = config.open_empty_category
-    ipv_type_prefer = list(config.ipv_type_prefer)
-    if any(pref in ipv_type_prefer for pref in ["自动", "auto"]) or not ipv_type_prefer:
-        ipv_type_prefer = ["ipv6", "ipv4"] if (ipv6 or os.environ.get("GITHUB_ACTIONS")) else ["ipv4", "ipv6"]
-    origin_type_prefer = config.origin_type_prefer
-    for cate, channel_obj in data.items():
-        print(f"\n{cate}:", end=" ")
-        write_content_into_txt(f"{cate},#genre#", path)
-        channel_obj_keys = channel_obj.keys()
-        names_len = len(list(channel_obj_keys))
-        for i, name in enumerate(channel_obj_keys):
-            info_list = data.get(cate, {}).get(name, [])
-            channel_urls = get_total_urls(info_list, ipv_type_prefer, origin_type_prefer)
-            end_char = ", " if i < names_len - 1 else ""
-            print(f"{name}:", len(channel_urls), end=end_char)
-            if not channel_urls:
-                if open_empty_category:
-                    no_result_name.append(name)
-                continue
-            for url in channel_urls:
-                write_content_into_txt(f"{name},{url}", path, callback=callback)
-        print()
-        write_content_into_txt("", path)
-    if open_empty_category and no_result_name:
-        print("\n🈳 No result channel name:")
-        write_content_into_txt("🈳无结果频道,#genre#", path)
-        for i, name in enumerate(no_result_name):
-            end_char = ", " if i < len(no_result_name) - 1 else ""
-            print(name, end=end_char)
-            write_content_into_txt(f"{name},url", path)
-        print()
+    try:
+        path = constants.result_path
+        if not os.path.exists("output"):
+            os.makedirs("output")
+        no_result_name = []
+        open_empty_category = config.open_empty_category
+        ipv_type_prefer = list(config.ipv_type_prefer)
+        if any(pref in ipv_type_prefer for pref in ["自动", "auto"]) or not ipv_type_prefer:
+            ipv_type_prefer = ["ipv6", "ipv4"] if ipv6 else ["ipv4", "ipv6"]
+        origin_type_prefer = config.origin_type_prefer
+        if config.open_update_time:
+            now = datetime.datetime.now()
+            if os.environ.get("GITHUB_ACTIONS"):
+                now += datetime.timedelta(hours=8)
+            update_time = now.strftime("%Y-%m-%d %H:%M:%S")
+            update_time_url = next(
+                (get_total_urls(info_list, ipv_type_prefer, origin_type_prefer)[0]
+                 for channel_obj in data.values()
+                 for info_list in channel_obj.values() if info_list),
+                "url"
+            )
+            write_content_into_txt(f"🕘️更新时间,#genre#", path, newline=False)
+            write_content_into_txt(f"{update_time},{update_time_url}", path)
+            write_content_into_txt("", path)
+        for cate, channel_obj in data.items():
+            print(f"\n{cate}:", end=" ")
+            write_content_into_txt(f"{cate},#genre#", path)
+            channel_obj_keys = channel_obj.keys()
+            names_len = len(list(channel_obj_keys))
+            for i, name in enumerate(channel_obj_keys):
+                info_list = data.get(cate, {}).get(name, [])
+                channel_urls = get_total_urls(info_list, ipv_type_prefer, origin_type_prefer)
+                end_char = ", " if i < names_len - 1 else ""
+                print(f"{name}:", len(channel_urls), end=end_char)
+                if not channel_urls:
+                    if open_empty_category:
+                        no_result_name.append(name)
+                    continue
+                for url in channel_urls:
+                    write_content_into_txt(f"{name},{url}", path, callback=callback)
+            print()
+            write_content_into_txt("", path)
+        if open_empty_category and no_result_name:
+            print("\n🈳 No result channel name:")
+            write_content_into_txt("🈳无结果频道,#genre#", path)
+            for i, name in enumerate(no_result_name):
+                end_char = ", " if i < len(no_result_name) - 1 else ""
+                print(name, end=end_char)
+                write_content_into_txt(f"{name},url", path)
+            print()
+    except Exception as e:
+        print(f"❌ Write channel to file failed: {e}")
 
 
 def get_multicast_fofa_search_org(region, type):

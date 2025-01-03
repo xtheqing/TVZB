@@ -30,8 +30,10 @@ async def get_channels_by_subscribe_urls(
     """
     Get the channels by subscribe urls
     """
+    if whitelist:
+        urls.sort(key=lambda url: whitelist.index(url) if url in whitelist else len(whitelist))
     subscribe_results = {}
-    subscribe_urls_len = len(urls if urls else config.subscribe_urls)
+    subscribe_urls_len = len(urls)
     pbar = tqdm_asyncio(
         total=subscribe_urls_len,
         desc=f"Processing subscribe {'for multicast' if multicast else ''}",
@@ -43,7 +45,6 @@ async def get_channels_by_subscribe_urls(
             f"正在获取{mode_name}源, 共{subscribe_urls_len}个{mode_name}源",
             0,
         )
-    session = Session()
     hotel_name = constants.origin_map["hotel"]
     multicast_name = constants.origin_map["multicast"]
     subscribe_name = constants.origin_map["subscribe"]
@@ -57,6 +58,7 @@ async def get_channels_by_subscribe_urls(
             subscribe_url = subscribe_info
         channels = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
         in_whitelist = whitelist and (subscribe_url in whitelist)
+        session = Session()
         try:
             response = None
             try:
@@ -100,7 +102,7 @@ async def get_channels_by_subscribe_urls(
                                 )
                             )
                             if in_whitelist:
-                                info = "!" + info
+                                info = "!"
                             url = add_url_info(url, info)
                         url = format_url_with_cache(
                             url, cache=subscribe_url if (multicast or hotel) else None
@@ -122,6 +124,7 @@ async def get_channels_by_subscribe_urls(
             if error_print:
                 print(f"Error on {subscribe_url}: {e}")
         finally:
+            session.close()
             pbar.update()
             remain = subscribe_urls_len - pbar.n
             if callback:
@@ -134,10 +137,9 @@ async def get_channels_by_subscribe_urls(
     with ThreadPoolExecutor(max_workers=100) as executor:
         futures = [
             executor.submit(process_subscribe_channels, subscribe_url)
-            for subscribe_url in (urls if urls else config.subscribe_urls)
+            for subscribe_url in urls
         ]
         for future in futures:
             subscribe_results = merge_objects(subscribe_results, future.result())
-    session.close()
     pbar.close()
     return subscribe_results

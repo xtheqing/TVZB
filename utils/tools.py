@@ -1,5 +1,6 @@
 import datetime
 import ipaddress
+import json
 import logging
 import os
 import re
@@ -11,6 +12,7 @@ from collections import defaultdict
 from logging.handlers import RotatingFileHandler
 from time import time
 
+import pytz
 import requests
 from bs4 import BeautifulSoup
 from flask import send_file, make_response
@@ -149,12 +151,13 @@ def get_total_urls(info_list, ipv_type_prefer, origin_type_prefer):
     """
     Get the total urls from info list
     """
+    ipv_prefer_bool = bool(ipv_type_prefer)
     origin_prefer_bool = bool(origin_type_prefer)
+    if not ipv_prefer_bool:
+        ipv_type_prefer = ["all"]
     if not origin_prefer_bool:
         origin_type_prefer = ["all"]
-    categorized_urls = {
-        origin: {"ipv4": [], "ipv6": []} for origin in origin_type_prefer
-    }
+    categorized_urls = {origin: {ipv_type: [] for ipv_type in ipv_type_prefer} for origin in origin_type_prefer}
     total_urls = []
     for url, _, resolution, origin in info_list:
         if not origin:
@@ -188,15 +191,14 @@ def get_total_urls(info_list, ipv_type_prefer, origin_type_prefer):
         if not origin_prefer_bool:
             origin = "all"
 
-        if url_is_ipv6:
-            categorized_urls[origin]["ipv6"].append(url)
+        if ipv_prefer_bool:
+            key = "ipv6" if url_is_ipv6 else "ipv4"
+            if key in ipv_type_prefer:
+                categorized_urls[origin][key].append(url)
         else:
-            categorized_urls[origin]["ipv4"].append(url)
+            categorized_urls[origin]["all"].append(url)
 
-    ipv_num = {
-        "ipv4": 0,
-        "ipv6": 0,
-    }
+    ipv_num = {ipv_type: 0 for ipv_type in ipv_type_prefer}
     urls_limit = config.urls_limit
     for origin in origin_type_prefer:
         if len(total_urls) >= urls_limit:
@@ -204,31 +206,21 @@ def get_total_urls(info_list, ipv_type_prefer, origin_type_prefer):
         for ipv_type in ipv_type_prefer:
             if len(total_urls) >= urls_limit:
                 break
-            if ipv_num[ipv_type] < config.ipv_limit[ipv_type]:
+            ipv_type_num = ipv_num[ipv_type]
+            ipv_type_limit = config.ipv_limit[ipv_type] or urls_limit
+            if ipv_type_num < ipv_type_limit:
                 urls = categorized_urls[origin][ipv_type]
                 if not urls:
-                    break
+                    continue
                 limit = min(
-                    max(config.source_limits.get(origin, urls_limit) - ipv_num[ipv_type], 0),
-                    max(config.ipv_limit[ipv_type] - ipv_num[ipv_type], 0),
+                    max(config.source_limits.get(origin, urls_limit) - ipv_type_num, 0),
+                    max(ipv_type_limit - ipv_type_num, 0),
                 )
                 limit_urls = urls[:limit]
                 total_urls.extend(limit_urls)
                 ipv_num[ipv_type] += len(limit_urls)
             else:
                 continue
-
-    ipv_type_total = list(dict.fromkeys(ipv_type_prefer + ["ipv4", "ipv6"]))
-    if len(total_urls) < urls_limit:
-        for origin in origin_type_prefer:
-            if len(total_urls) >= urls_limit:
-                break
-            for ipv_type in ipv_type_total:
-                if len(total_urls) >= urls_limit:
-                    break
-                extra_urls = categorized_urls[origin][ipv_type][: config.source_limits.get(origin, urls_limit)]
-                total_urls.extend(extra_urls)
-                total_urls = list(dict.fromkeys(total_urls))[:urls_limit]
 
     total_urls = list(dict.fromkeys(total_urls))[:urls_limit]
 
@@ -240,7 +232,7 @@ def get_total_urls(info_list, ipv_type_prefer, origin_type_prefer):
 
 def get_total_urls_from_sorted_data(data):
     """
-    Get the total urls with filter by date and depulicate from sorted data
+    Get the total urls with filter by date and duplicate from sorted data
     """
     total_urls = []
     if len(data) > config.urls_limit:
@@ -348,14 +340,14 @@ def get_ip_address():
         return f"http://{ip}:{config.app_port}"
 
 
-def convert_to_m3u():
+def convert_to_m3u(first_channel_name=None):
     """
     Convert result txt to m3u format
     """
     user_final_file = resource_path(config.final_file)
     if os.path.exists(user_final_file):
         with open(user_final_file, "r", encoding="utf-8") as file:
-            m3u_output = '#EXTM3U x-tvg-url="https://live.fanmingming.cn/e.xml"\n'
+            m3u_output = '#EXTM3U x-tvg-url="https://raw.githubusercontent.com/fanmingming/live/main/e.xml"\n'
             current_group = None
             for line in file:
                 trimmed_line = line.strip()
@@ -373,9 +365,9 @@ def convert_to_m3u():
                             r"(CCTV|CETV)-(\d+)(\+.*)?",
                             lambda m: f"{m.group(1)}{m.group(2)}"
                                       + ("+" if m.group(3) else ""),
-                            original_channel_name,
+                            first_channel_name if current_group == "🕘️更新时间" else original_channel_name,
                         )
-                        m3u_output += f'#EXTINF:-1 tvg-name="{processed_channel_name}" tvg-logo="https://live.fanmingming.cn/tv/{processed_channel_name}.png"'
+                        m3u_output += f'#EXTINF:-1 tvg-name="{processed_channel_name}" tvg-logo="https://raw.githubusercontent.com/fanmingming/live/main/tv/{processed_channel_name}.png"'
                         if current_group:
                             m3u_output += f' group-title="{current_group}"'
                         m3u_output += f",{original_channel_name}\n{channel_link}\n"
@@ -426,8 +418,9 @@ def remove_duplicates_from_tuple_list(tuple_list, seen, flag=None, force_str=Non
             matcher = re.search(flag, item_first)
             if matcher:
                 part = matcher.group(1)
-        if part not in seen:
-            seen.add(part)
+        seen_num = seen.get(part, 0)
+        if (seen_num < config.sort_duplicate_limit) or (seen_num == 0 and config.sort_duplicate_limit == 0):
+            seen[part] = seen_num + 1
             unique_list.append(item)
     return unique_list
 
@@ -443,16 +436,16 @@ def process_nested_dict(data, seen, flag=None, force_str=None):
             data[key] = remove_duplicates_from_tuple_list(value, seen, flag, force_str)
 
 
-url_domain_compile = re.compile(
-    constants.url_domain_pattern
+url_host_compile = re.compile(
+    constants.url_host_pattern
 )
 
 
-def get_url_domain(url):
+def get_url_host(url):
     """
-    Get the url domain
+    Get the url host
     """
-    matcher = url_domain_compile.search(url)
+    matcher = url_host_compile.search(url)
     if matcher:
         return matcher.group()
     return None
@@ -472,7 +465,7 @@ def format_url_with_cache(url, cache=None):
     """
     Format the URL with cache
     """
-    cache = cache or get_url_domain(url) or ""
+    cache = cache or get_url_host(url) or ""
     return add_url_info(url, f"cache:{cache}") if cache else url
 
 
@@ -480,7 +473,7 @@ def remove_cache_info(string):
     """
     Remove the cache info from the string
     """
-    return re.sub(r"[^a-zA-Z\u4e00-\u9fa5$]?cache:.*", "", string)
+    return re.sub(r"[.*]?\$?-?cache:.*", "", string)
 
 
 def resource_path(relative_path, persistent=False):
@@ -499,16 +492,19 @@ def resource_path(relative_path, persistent=False):
             return total_path
 
 
-def write_content_into_txt(content, path=None, newline=True, callback=None):
+def write_content_into_txt(content, path=None, position=None, callback=None):
     """
     Write content into txt file
     """
     if not path:
         return
 
-    with open(path, "a", encoding="utf-8") as f:
-        if newline:
-            f.write(f"\n{content}")
+    mode = "r+" if position == "top" else "a"
+    with open(path, mode, encoding="utf-8") as f:
+        if position == "top":
+            existing_content = f.read()
+            f.seek(0, 0)
+            f.write(f"{content}\n{existing_content}")
         else:
             f.write(content)
 
@@ -579,3 +575,20 @@ def get_name_urls_from_file(path: str) -> dict[str, list]:
                     if url not in name_urls[name]:
                         name_urls[name].append(url)
     return name_urls
+
+
+def get_datetime_now():
+    """
+    Get the datetime now
+    """
+    now = datetime.datetime.now()
+    time_zone = pytz.timezone(config.time_zone)
+    return now.astimezone(time_zone).strftime("%Y-%m-%d %H:%M:%S")
+
+
+def get_version_info():
+    """
+    Get the version info
+    """
+    with open(resource_path("version.json"), "r", encoding="utf-8") as f:
+        return json.load(f)
